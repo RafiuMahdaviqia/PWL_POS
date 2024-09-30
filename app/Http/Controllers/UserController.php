@@ -20,9 +20,7 @@ class UserController extends Controller
         UserModel::create($data);
         */
 
-        $user = UserModel::findOr(20,['username', 'nama'], function () {
-            abort(404);
-        });
+        $user = UserModel::where('level_id',2)->count();
         return view('user', ['data' => $user]);
         
     }
