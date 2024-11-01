@@ -24,7 +24,7 @@
     </table> --}}
 
     {{-- Jobsheet 4 --}}
-    <table border="1" cellpadding="2" cellspacing="0">
+    {{-- <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td>ID</td>
             <td>Username</td>
@@ -36,6 +36,17 @@
             <td> {{$data->username}} </td>
             <td> {{$data->nama}} </td>
             <td> {{$data->level_id}} </td>
-        </tr>
+        </tr> --}}
+
+        {{-- prak 2.3 --}}
+        <h1>Data user</h1>
+        <table border="1" cellpadding="2" cellspacing="0">
+            <tr>
+                <th>Jumlah Pengguna</th>
+            </tr>
+            <tr>
+                <td> {{$data}} </td>
+            </tr>
+        </table>
 </body>
 </html>
