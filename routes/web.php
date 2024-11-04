@@ -1,59 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{config('app.name', 'PWL Laravel Code')}} </title>
+<?php
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
-</head>
-<body class="hold-transition sidebar-mini">
-<!-- Site wrapper -->
-<div class="wrapper">
-  <!-- Navbar -->
-  @include('layout.header')
-  <!-- /.navbar -->
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
+use App\Models\UserModel;
+use Illuminate\Support\Facades\DB;
 
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="{{url('/')}}" class="brand-link">
-      <img src="{{asset('adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">PWL - Starter Code</span>
-    </a>
-
-    <!-- Sidebar -->
-    @include('layout.sidebar')
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    @include('layout.breadcrumb')
-
-    <!-- Main content -->
-    <section class="content">
-        @yield('content')
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  @include('layout.footer')
-</div>
-<!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="{{asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-</body>
-</html>
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get('/level', [LevelController::class, 'index']);
+// Route::get('/kategori', [KategoriController::class, 'index']);
+// Route::get('/user', [UserController::class, 'index']);
+// Route::get('/user/tambah', [UserController::class, 'tambah']);
+// Route::post('/user/tambah_simpan', [UserController::class, 'tambah_simpan']);
+// Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+// Route::put('/user/ubah_simpan/{id}', [UserController::class, 'ubah_simpan']);
+// Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
+// Route::get('/', [WelcomeController::class, 'index']);
+Route::group(['prefix' => 'user'], function(){
+    Route::get('/', [UserController::class, 'index']); //halaman awal
+    Route::post('/list', [UserController::class, 'list']);  //data user (json)
+    Route::get('/create', [UserController::class, 'create']); //form tambah user
+    Route::post('/', [UserController::class, 'store']); //data user baru
+    Route::get('/{id}', [UserController::class, 'show']); //detail user
+    Route::get('/{id}/edit', [UserController::class, 'edit']); //form edit
+    Route::put('/{id}', [UserController::class, 'update']); // simpan perubahan data
+    Route::delete('/{id}', [UserController::class, 'destroy']); //hapus data user
+});
