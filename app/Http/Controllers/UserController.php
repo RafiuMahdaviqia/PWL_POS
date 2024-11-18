@@ -6,7 +6,9 @@ use App\Models\LevelModel;
 use App\Models\UserModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\DataTables;
@@ -55,7 +57,7 @@ class UserController extends Controller
         //     })
         //     ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html
         //     ->make(true);
-        $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
+        $users = UserModel::select('user_id', 'username', 'nama', 'foto', 'level_id')
             ->with('level');
         // Filter data user berdasarkan level_id
         if ($request->level_id) {
@@ -124,7 +126,8 @@ class UserController extends Controller
                 'level_id'  => 'required|integer',
                 'username'  => 'required|string|min:3|unique:m_user,username',
                 'nama'      => 'required|string|max:100',
-                'password'  => 'required|min:6'
+                'password'  => 'required|min:6',
+                'foto'      => 'image|mimes:jpeg,png,jpg|max:2048'
             ];
             // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
@@ -136,6 +139,22 @@ class UserController extends Controller
                     'msgField'  => $validator->errors(), // pesan error validasi
                 ]);
             }
+            // // Define the file name using the user's id and the file extension
+            // $fileExtension = $request->file('foto')->getClientOriginalExtension();
+            // $fileName = 'profile_' . Auth::user()->user_id . '.' . $fileExtension;
+            // // Check if an existing profile picture exists and delete it
+            // $oldFile = 'profile_pictures/' . $fileName;
+            // if (Storage::disk('public')->exists($oldFile)) {
+            //     Storage::disk('public')->delete($oldFile);
+            // }
+            // // Store the new file with the user id as the file name
+            // $path = $request->file('foto')->storeAs('images', $fileName, 'public');
+            // $request['foto'] = $path;
+            // UserModel::create($request->all());
+            // Define the file name using the user's id and the file extension
+            $fileName = time() . $request->file('foto')->getClientOriginalExtension();
+            $path = $request->file('foto')->storeAs('images', $fileName);
+            $request['foto'] = '/storage/' . $path;
             UserModel::create($request->all());
             return response()->json([
                 'status'    => true,
@@ -210,7 +229,8 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|max:20|unique:m_user,username,' . $id . ',user_id',
                 'nama' => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'password' => 'nullable|min:6|max:20',
+                'foto'      => 'image|mimes:jpeg,png,jpg|max:2048'
             ];
             // use Illuminate\Support\Facades\Validator;
             $validator = Validator::make($request->all(), $rules);
@@ -226,6 +246,26 @@ class UserController extends Controller
                 if (!$request->filled('password')) { // jika password tidak diisi, maka hapus dari request
                     $request->request->remove('password');
                 }
+                // // Define the file name using the user's id and the file extension
+                // $fileExtension = $request->file('foto')->getClientOriginalExtension();
+                // $fileName = 'profile_' . Auth::user()->user_id . '.' . $fileExtension;
+                // // Check if an existing profile picture exists and delete it
+                // $oldFile = 'profile_pictures/' . $fileName;
+                // if (Storage::disk('public')->exists($oldFile)) {
+                //     Storage::disk('public')->delete($oldFile);
+                // }
+                // // Store the new file with the user id as the file name
+                // $path = $request->file('foto')->storeAs('profile_pictures', $fileName, 'public');
+                // $request['foto'] = $path;
+                // Define the file name using the user's id and the file extension
+                $fileName = time() . $request->file('foto')->getClientOriginalExtension();
+                $path = $request->file('foto')->storeAs('images', $fileName);
+                $request['foto'] = '/storage/' . $path;
+
+                if (!$request->filled('foto')) { // jika password tidak diisi, maka hapus dari request 
+                    $request->request->remove('foto');
+                }
+
                 $check->update($request->all());
                 return response()->json([
                     'status' => true,

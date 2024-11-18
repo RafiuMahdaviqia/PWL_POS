@@ -42,8 +42,8 @@
                         <th>ID</th>
                         <th>Username</th>
                         <th>Nama</th>
-                        <th>Level
-                            Pengguna</th>
+                        <th>Level Pengguna</th>
+                        <th>Foto</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -96,6 +96,12 @@
                     className: "",
                     width: "14%",
                     orderable: true,
+                    searchable: false
+                }, {
+                    data: "foto",
+                    className: "",
+                    width: "14%",
+                    orderable: false,
                     searchable: false
                 }, {
                     data: "aksi",
