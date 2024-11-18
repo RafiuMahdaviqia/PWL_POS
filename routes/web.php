@@ -1,155 +1,145 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register Pengguna</title>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-</head>
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\StokController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WelcomeController;
+use Illuminate\Support\Facades\Route;
 
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center"><a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a></div>
-            <div class="card-body">
-                <p class="login-box-msg">Sign up to start your session</p>
-                <form action="{{ url('register') }}" method="POST" id="form-register">
-                    @csrf
-                    <div class="form-group">
-                        <label>Level Pengguna</label>
-                        <select name="level_id" id="level_id" class="form-control" required>
-                            <option value="">- Pilih Level -</option>
-                            @foreach ($level as $l)
-                                <option value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
-                            @endforeach
-                        </select>
-                        <small id="error-level_id" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input value="" type="text" name="username" id="username" class="form-control" required>
-                        <small id="error-username" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Nama</label>
-                        <input value="" type="text" name="nama" id="nama" class="form-control" required>
-                        <small id="error-nama" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input value="" type="password" name="password" id="password" class="form-control" required>
-                        <small id="error-password" class="error-text form-text text-danger"></small>
-                    </div>
-                    <div class="row">
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </form>
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.login-box -->
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
-    <!-- jQuery -->
-    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- jquery-validation -->
-    <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $(document).ready(function() {
-            $("#form-register").validate({
-                rules: {
-                    level_id: {
-                    required: true,
-                    number: true
-                },
-                username: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 20
-                },
-                nama: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 100
-                },
-                password: {
-                    required: true,
-                    minlength: 6,
-                    maxlength: 20
-                }
-                },
-                submitHandler: function(form) { // ketika valid, maka bagian yg akan dijalankan
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.status) { // jika sukses
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message,
-                                }).then(function() {
-                                    window.location = response.redirect;
-                                });
-                            } else { // jika error
-                                $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi Kesalahan',
-                                    text: response.message
-                                });
-                            }
-                        }
-                    });
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.input-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
-            });
-        });
-    </script>
-</body>
+Route::pattern('id', '[0-9]+');
 
-</html>
+Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'postlogin']);
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('register', [AuthController::class, 'register']);
+Route::post('register', [AuthController::class, 'store']);
+
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/', [WelcomeController::class, 'index']);
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::get('/', [UserController::class, 'index']);          // menampilkan halaman awal user
+        Route::post('/list', [UserController::class, 'list']);      // menampilkan data user dalam bentuk json untuk datatables
+        Route::get('/create', [UserController::class, 'create']);   // menampilkan halaman form tambah user
+        Route::post('/', [UserController::class, 'store']);         // menyimpan data user baru
+        Route::get('/create_ajax', [UserController::class, 'create_ajax']);   // menampilkan halaman form tambah user
+        Route::post('/ajax', [UserController::class, 'store_ajax']);         // menyimpan data user baru
+        Route::get('/{id}', [UserController::class, 'show']);       // menampilkan detail user
+        Route::get('/{id}/edit', [UserController::class, 'edit']);  // menampilkan halaman form edit user
+        Route::put('/{id}', [UserController::class, 'update']);     // menyimpan perubahan data user
+        Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']);  // menampilkan halaman form edit user
+        Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']);     // menyimpan perubahan data user
+        Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']);     // menyimpan perubahan data user
+        Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // menghapus data user
+        Route::delete('/{id}', [UserController::class, 'destroy']); // menghapus data user
+    });
+
+    // Route::group(['prefix' => 'level'], function () {
+    Route::middleware(['authorize:ADM'])->group(function () {
+        Route::get('/level', [LevelController::class, 'index']);          // menampilkan halaman awal level
+        Route::post('/level/list', [LevelController::class, 'list']);      // menampilkan data level dalam bentuk json untuk datatables
+        Route::get('/level/create', [LevelController::class, 'create']);   // menampilkan halaman form tambah level
+        Route::get('/level/create_ajax', [LevelController::class, 'create_ajax']);
+        Route::post('/level', [LevelController::class, 'store']);         // menyimpan data level baru
+        Route::post('/level/ajax', [LevelController::class, 'store_ajax']);
+        Route::get('/level/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
+        Route::put('/level/{id}/update_ajax', [LevelController::class, 'update_ajax']);
+        Route::get('/level/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
+        Route::delete('/level/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
+        Route::get('/level/{id}', [LevelController::class, 'show']);       // menampilkan detail level
+        Route::get('/level/{id}/edit', [LevelController::class, 'edit']);  // menampilkan halaman form edit level
+        Route::put('/level/{id}', [LevelController::class, 'update']);     // menyimpan perubahan data level
+        Route::delete('/level/{id}', [LevelController::class, 'destroy']); // menghapus data level
+    });
+
+    // Route::group(['prefix' => 'kategori'], function () {
+    Route::middleware(['authorize:ADM,MNG'])->group(function () {
+        Route::get('/kategori', [KategoriController::class, 'index']);          // menampilkan halaman awal kategori
+        Route::post('/kategori/list', [KategoriController::class, 'list']);      // menampilkan data kategori dalam bentuk json untuk datatables
+        Route::get('/kategori/create', [KategoriController::class, 'create']);   // menampilkan halaman form tambah kategori
+        Route::get('/kategori/create_ajax', [KategoriController::class, 'create_ajax']);
+        Route::post('/kategori/ajax', [KategoriController::class, 'store_ajax']);
+        Route::post('/kategori', [KategoriController::class, 'store']);         // menyimpan data kategori baru
+        Route::get('/kategori/{id}', [KategoriController::class, 'show']);       // menampilkan detail kategori
+        Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit']);  // menampilkan halaman form edit kategori
+        Route::put('/kategori/{id}', [KategoriController::class, 'update']);     // menyimpan perubahan data kategori
+        Route::get('/kategori/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
+        Route::put('/kategori/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+        Route::get('/kategori/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
+        Route::delete('/kategori/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
+        Route::delete('/kategori/{id}', [KategoriController::class, 'destroy']); // menghapus data kategori
+    });
+
+    // Route::group(['prefix' => 'barang'], function () {
+    Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
+        Route::get('/barang', [BarangController::class, 'index']);          // menampilkan halaman awal barang
+        Route::post('/barang/list', [BarangController::class, 'list']);      // menampilkan data barang dalam bentuk json untuk datatables
+        Route::get('/barang/create', [BarangController::class, 'create']);   // menampilkan halaman form tambah barang
+        Route::get('/barang/create_ajax', [BarangController::class, 'create_ajax']);
+        Route::post('/barang', [BarangController::class, 'store']);         // menyimpan data barang baru
+        Route::get('/barang/import', [BarangController::class, 'import']);
+        Route::post('/barang/import_ajax', [BarangController::class, 'import_ajax']);
+        Route::post('/barang/ajax', [BarangController::class, 'store_ajax']);
+        Route::get('/barang/{id}', [BarangController::class, 'show']);       // menampilkan detail barang
+        Route::get('/barang/{id}/edit', [BarangController::class, 'edit']);  // menampilkan halaman form edit barang
+        Route::put('/barang/{id}', [BarangController::class, 'update']);     // menyimpan perubahan data barang
+        Route::get('/barang/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
+        Route::put('/barang/{id}/update_ajax', [BarangController::class, 'update_ajax']);
+        Route::get('/barang/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);
+        Route::delete('/barang/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
+        Route::delete('/barang/{id}', [BarangController::class, 'destroy']); // menghapus data barang
+    });
+
+    // Route::group(['prefix' => 'supplier'], function () {
+    Route::middleware(['authorize:ADM,MNG'])->group(function () {
+        Route::get('/supplier', [SupplierController::class, 'index']);          // menampilkan halaman awal supplier
+        Route::post('/supplier/list', [SupplierController::class, 'list']);      // menampilkan data supplier dalam bentuk json untuk datatables
+        Route::get('/supplier/create', [SupplierController::class, 'create']);   // menampilkan halaman form tambah supplier
+        Route::get('/supplier/create_ajax', [SupplierController::class, 'create_ajax']);
+        Route::post('/supplier', [SupplierController::class, 'store']);         // menyimpan data supplier baru
+        Route::post('/supplier/ajax', [SupplierController::class, 'store_ajax']);
+        Route::get('/supplier/{id}', [SupplierController::class, 'show']);       // menampilkan detail supplier
+        Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit']);  // menampilkan halaman form edit supplier
+        Route::put('/supplier/{id}', [SupplierController::class, 'update']);     // menyimpan perubahan data supplier
+        Route::get('/supplier/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
+        Route::put('/supplier/{id}/update_ajax', [SupplierController::class, 'update_ajax']);
+        Route::get('/supplier/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);
+        Route::delete('/supplier/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
+        Route::delete('/supplier/{id}', [SupplierController::class, 'destroy']); // menghapus data supplier
+    });
+
+    // Route::group(['prefix' => 'stok'], function () {
+    Route::middleware(['authorize:ADM,MNG,STF,CUS'])->group(function () {
+        Route::get('/stok', [StokController::class, 'index']);          // menampilkan halaman awal stok
+        Route::post('/stok/list', [StokController::class, 'list']);      // menampilkan data stok dalam bentuk json untuk datatables
+        Route::get('/stok/create', [StokController::class, 'create']);   // menampilkan halaman form tambah stok
+        Route::get('/stok/create_ajax', [StokController::class, 'create_ajax']);
+        Route::post('/stok/ajax', [StokController::class, 'store_ajax']);
+        Route::post('/stok', [StokController::class, 'store']);         // menyimpan data stok baru
+        Route::get('/stok/{id}', [StokController::class, 'show']);       // menampilkan detail stok
+        Route::get('/stok/{id}/edit', [StokController::class, 'edit']);  // menampilkan halaman form edit stok
+        Route::put('/stok/{id}', [StokController::class, 'update']);     // menyimpan perubahan data stok
+        Route::get('/stok/{id}/edit_ajax', [StokController::class, 'edit_ajax']);
+        Route::put('/stok/{id}/update_ajax', [StokController::class, 'update_ajax']);
+        Route::get('/stok/{id}/delete_ajax', [StokController::class, 'confirm_ajax']);
+        Route::delete('/stok/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
+        Route::delete('/stok/{id}', [StokController::class, 'destroy']); // menghapus data stok
+    });
+});
