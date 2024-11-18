@@ -5,23 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserModel extends Model
 {
     use HasFactory;
-    protected $table = 'm_user';
-    protected $primaryKey = 'user_id';
 
-    // JOBSHEET 4
-    // prak 1
-    protected $fillable = ['level_id', 'username', 'nama', 'password'];
-    // protected $fillable = ['level_id', 'username', 'nama'];
+    protected $table = 'm_user'; // Mendefinisikan nama tabel yang digunakan oleh model ini
+    protected $primaryKey = 'user_id'; // Mendefinisikan primary key dari tabel yang digunakan
 
-    // prak 2.4
-    // protected $table = 'user';
+    protected $fillable = ['level_id','username','nama', 'password'];
 
-    // prak 2.7
-    public function level(): BelongsTo{
-        return $this->belongsTo(LevelModel::class, 'level_id', 'level_id');
+    public function level():BelongsTo{
+        return $this->belongsTo(LevelModel::class, 'level_id','level_id');
     }
 }
