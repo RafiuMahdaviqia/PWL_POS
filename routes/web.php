@@ -63,6 +63,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/level/create_ajax', [LevelController::class, 'create_ajax']);
         Route::post('/level', [LevelController::class, 'store']);         // menyimpan data level baru
         Route::post('/level/ajax', [LevelController::class, 'store_ajax']);
+        Route::get('/level/import', [LevelController::class, 'import']);
+        Route::post('/level/import_ajax', [LevelController::class, 'import_ajax']);
+        Route::get('/level/export_excel', [LevelController::class, 'export_excel']); // export excel
+        Route::get('/level/export_pdf', [LevelController::class, 'export_pdf']); // export pdf
         Route::get('/level/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
         Route::put('/level/{id}/update_ajax', [LevelController::class, 'update_ajax']);
         Route::get('/level/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
