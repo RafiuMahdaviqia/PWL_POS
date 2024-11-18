@@ -1,4 +1,4 @@
-@empty($kategori)
+@empty($level)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,33 +10,33 @@
                         <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                         Data yang anda cari tidak ditemukan
                     </div>
-                    <a href="{{ url('/kategori') }}" class="btn btn-warning">Kembali</a>
+                    <a href="{{ url('/level') }}" class="btn btn-warning">Kembali</a>
                 </div>
             </div>
         </div>
     @else
-        <form action="{{ url('/kategori/' . $kategori->kategori_id . '/update_ajax') }}" method="POST" id="form-edit">
+        <form action="{{ url('/level/' . $level->level_id . '/update_ajax') }}" method="POST" id="form-edit">
             @csrf
             @method('PUT')
             <div id="modal-master" class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data kategori</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Data level</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>kategori Kode</label>
-                            <input value="{{ $kategori->kategori_kode }}" type="text" name="kategori_kode" id="kategori_kode"
+                            <label>Level Kode</label>
+                            <input value="{{ $level->level_kode }}" type="text" name="level_kode" id="level_kode"
                                 class="form-control" required>
-                            <small id="error-kategori_kode" class="error-text form-text text-danger"></small>
+                            <small id="error-level_kode" class="error-text form-text text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label>Nama kategori</label>
-                            <input value="{{ $kategori->kategori_nama }}" type="text" name="kategori_nama" id="kategori_nama"
+                            <label>Nama Level</label>
+                            <input value="{{ $level->level_nama }}" type="text" name="level_nama" id="level_nama"
                                 class="form-control" required>
-                            <small id="error-kategori_nama" class="error-text form-text text-danger"></small>
+                            <small id="error-level_nama" class="error-text form-text text-danger"></small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -50,12 +50,12 @@
             $(document).ready(function() {
                 $("#form-edit").validate({
                     rules: {
-                        kategori_kode: {
+                        level_kode: {
                             required: true,
                             minlength: 3,
                             maxlength: 20
                         },
-                        kategori_nama: {
+                        level_nama: {
                             required: true,
                             minlength: 3,
                             maxlength: 100
@@ -74,7 +74,7 @@
                                         title: 'Berhasil',
                                         text: response.message
                                     });
-                                    dataKategori.ajax.reload();
+                                    dataLevel.ajax.reload();
                                 } else {
                                     $('.error-text').text('');
                                     $.each(response.msgField, function(prefix, val) {

@@ -1,10 +1,14 @@
 @extends('layouts.template')
 @section('content')
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
     <div class="card card-outline card-primary">
         <div class="card-header">
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a>
+                <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah
+                    Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -27,13 +31,6 @@
                             </select>
                             <small class="form-text text-muted">supplier stok</small>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Filter:</label>
                         <div class="col-3">
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">- Semua -</option>
@@ -43,18 +40,11 @@
                             </select>
                             <small class="form-text text-muted">barang stok</small>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-1 control-label col-form-label">Filter:</label>
                         <div class="col-3">
                             <select class="form-control" id="user_id" name="user_id" required>
                                 <option value="">- Semua -</option>
                                 @foreach ($user as $item)
-                                    <option value="{{ $item->user_id }}">{{ $item->username}}</option>
+                                    <option value="{{ $item->user_id }}">{{ $item->username }}</option>
                                 @endforeach
                             </select>
                             <small class="form-text text-muted">user</small>
@@ -82,15 +72,21 @@
 @endpush
 @push('js')
     <script>
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+        var datastok;
         $(document).ready(function() {
-            var datastok = $('#table_stok').DataTable({
+            datastok = $('#table_stok').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('stok/list') }}",
                     "dataType": "json",
                     "type": "POST",
-                    "data": function (d) {
+                    "data": function(d) {
                         d.supplier_id = $('#supplier_id').val();
                         d.barang_id = $('#barang_id').val();
                         d.user_id = $('#user_id').val();
@@ -138,13 +134,13 @@
                 }]
             });
 
-            $('#supplier_id').on('change',function(){
+            $('#supplier_id').on('change', function() {
                 datastok.ajax.reload();
             });
-            $('#barang_id').on('change',function(){
+            $('#barang_id').on('change', function() {
                 datastok.ajax.reload();
             });
-            $('#user_id').on('change',function(){
+            $('#user_id').on('change', function() {
                 datastok.ajax.reload();
             });
         });

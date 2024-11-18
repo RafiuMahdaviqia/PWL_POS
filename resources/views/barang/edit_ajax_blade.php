@@ -1,4 +1,4 @@
-@empty($kategori)
+@empty($barang)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,33 +10,56 @@
                         <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                         Data yang anda cari tidak ditemukan
                     </div>
-                    <a href="{{ url('/kategori') }}" class="btn btn-warning">Kembali</a>
+                    <a href="{{ url('/barang') }}" class="btn btn-warning">Kembali</a>
                 </div>
             </div>
         </div>
     @else
-        <form action="{{ url('/kategori/' . $kategori->kategori_id . '/update_ajax') }}" method="POST" id="form-edit">
+        <form action="{{ url('/barang/' . $barang->barang_id . '/update_ajax') }}" method="POST" id="form-edit">
             @csrf
             @method('PUT')
             <div id="modal-master" class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data kategori</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Data barang</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>kategori Kode</label>
-                            <input value="{{ $kategori->kategori_kode }}" type="text" name="kategori_kode" id="kategori_kode"
-                                class="form-control" required>
-                            <small id="error-kategori_kode" class="error-text form-text text-danger"></small>
+                            <label>kategori Pengguna</label>
+                            <select name="kategori_id" id="kategori_id" class="form-control" required>
+                                <option value="">- Pilih Kategori -</option>
+                                @foreach ($kategori as $l)
+                                    <option {{ $l->kategori_id == $barang->kategori_id ? 'selected' : '' }}
+                                        value="{{ $l->kategori_id }}">{{ $l->kategori_nama }}</option>
+                                @endforeach
+                            </select>
+                            <small id="error-kategori_id" class="error-text form-text text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label>Nama kategori</label>
-                            <input value="{{ $kategori->kategori_nama }}" type="text" name="kategori_nama" id="kategori_nama"
+                            <label>Barang Kode</label>
+                            <input value="{{ $barang->barang_kode }}" type="text" name="barang_kode" id="barang_kode"
                                 class="form-control" required>
-                            <small id="error-kategori_nama" class="error-text form-text text-danger"></small>
+                            <small id="error-barang_kode" class="error-text form-text text-danger"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Barang</label>
+                            <input value="{{ $barang->barang_nama }}" type="text" name="barang_nama" id="barang_nama"
+                                class="form-control" required>
+                            <small id="error-barang_nama" class="error-text form-text text-danger"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Beli</label>
+                            <input value="{{ $barang->harga_beli }}" type="text" name="harga_beli" id="harga_beli"
+                                class="form-control" required>
+                            <small id="error-harga_beli" class="error-text form-text text-danger"></small>
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Jual</label>
+                            <input value="{{ $barang->harga_jual }}" type="text" name="harga_jual" id="harga_jual"
+                                class="form-control" required>
+                            <small id="error-harga_jual" class="error-text form-text text-danger"></small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -50,15 +73,27 @@
             $(document).ready(function() {
                 $("#form-edit").validate({
                     rules: {
-                        kategori_kode: {
+                        kategori_id: {
+                            required: true,
+                            number: true
+                        },
+                        barang_kode: {
                             required: true,
                             minlength: 3,
                             maxlength: 20
                         },
-                        kategori_nama: {
+                        barang_nama: {
                             required: true,
                             minlength: 3,
                             maxlength: 100
+                        },
+                        harga_beli: {
+                            required: true,
+                            minlength: 3
+                        },
+                        harga_jual: {
+                            required: true,
+                            minlength: 3,
                         }
                     },
                     submitHandler: function(form) {
@@ -74,7 +109,7 @@
                                         title: 'Berhasil',
                                         text: response.message
                                     });
-                                    dataKategori.ajax.reload();
+                                    dataBarang.ajax.reload();
                                 } else {
                                     $('.error-text').text('');
                                     $.each(response.msgField, function(prefix, val) {
