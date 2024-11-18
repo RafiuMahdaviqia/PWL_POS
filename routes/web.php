@@ -129,6 +129,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/supplier/create_ajax', [SupplierController::class, 'create_ajax']);
         Route::post('/supplier', [SupplierController::class, 'store']);         // menyimpan data supplier baru
         Route::post('/supplier/ajax', [SupplierController::class, 'store_ajax']);
+        Route::get('/supplier/import', [SupplierController::class, 'import']);
+        Route::post('/supplier/import_ajax', [SupplierController::class, 'import_ajax']);
+        Route::get('/supplier/export_excel', [SupplierController::class, 'export_excel']); // export excel
+        Route::get('/supplier/export_pdf', [SupplierController::class, 'export_pdf']); // export pdf
         Route::get('/supplier/{id}', [SupplierController::class, 'show']);       // menampilkan detail supplier
         Route::get('/supplier/{id}/edit', [SupplierController::class, 'edit']);  // menampilkan halaman form edit supplier
         Route::put('/supplier/{id}', [SupplierController::class, 'update']);     // menyimpan perubahan data supplier
