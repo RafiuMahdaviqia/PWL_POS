@@ -59,6 +59,10 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                    <hr>
+                    <div class="row">
+                        Don't have account?<a href="{{ url('register') }}">register</a>
+                    </div>
                 </form>
             </div>
             <!-- /.card-body -->
