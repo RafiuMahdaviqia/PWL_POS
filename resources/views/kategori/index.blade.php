@@ -1,107 +1,93 @@
-@empty($kategori)
-    <div id="modal-master" class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <div class="modal-body">
-                    <div class="alert alert-danger">
-                        <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                        Data yang anda cari tidak ditemukan
-                    </div>
-                    <a href="{{ url('/kategori') }}" class="btn btn-warning">Kembali</a>
-                </div>
+@extends('layouts.template')
+@section('content')
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Daftar kategori</h3>
+            <div class="card-tools">
+                <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-info">Import kategori</button>
+                <a href="{{ url('/kategori/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export kategori</a>
+                <a href="{{ url('/kategori/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export kategori</a>
+                <button onclick="modalAction('{{ url('/kategori/create_ajax') }}')" class="btn btn-success">Tambah Data
+                    (Ajax)</button>
             </div>
         </div>
-    @else
-        <form action="{{ url('/kategori/' . $kategori->kategori_id . '/update_ajax') }}" method="POST" id="form-edit">
-            @csrf
-            @method('PUT')
-            <div id="modal-master" class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data kategori</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>kategori Kode</label>
-                            <input value="{{ $kategori->kategori_kode }}" type="text" name="kategori_kode" id="kategori_kode"
-                                class="form-control" required>
-                            <small id="error-kategori_kode" class="error-text form-text text-danger"></small>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama kategori</label>
-                            <input value="{{ $kategori->kategori_nama }}" type="text" name="kategori_nama" id="kategori_nama"
-                                class="form-control" required>
-                            <small id="error-kategori_nama" class="error-text form-text text-danger"></small>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <script>
-            $(document).ready(function() {
-                $("#form-edit").validate({
-                    rules: {
-                        kategori_kode: {
-                            required: true,
-                            minlength: 3,
-                            maxlength: 20
-                        },
-                        kategori_nama: {
-                            required: true,
-                            minlength: 3,
-                            maxlength: 100
-                        }
-                    },
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: $(form).serialize(),
-                            success: function(response) {
-                                if (response.status) {
-                                    $('#myModal').modal('hide');
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil',
-                                        text: response.message
-                                    });
-                                    dataKategori.ajax.reload();
-                                } else {
-                                    $('.error-text').text('');
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                    });
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Terjadi Kesalahan',
-                                        text: response.message
-                                    });
-                                }
-                            }
-                        });
-                        return false;
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('invalid-feedback');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    }
-                });
+        <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+            <table class="table table-bordered table-sm table-striped table-hover" id="table-kategori">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode kategori</th>
+                        <th>Nama kategori</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" data-backdrop="static" data-keyboard="false"
+        data-width="75%"></div>
+@endsection
+@push('js')
+    <script>
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
             });
-        </script>
-    @endempty
+        }
+        var tableKategori;
+        $(document).ready(function() {
+            tableKategori = $('#table-kategori').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    "url": "{{ url('kategori/list') }}",
+                    "dataType": "json",
+                    "type": "POST",
+                    "data": function(d) {
+                        d.filter_kategori = $('.filter_kategori').val();
+                    }
+                },
+                columns: [{
+                    data: "kategori_id",
+                    className: "text-center",
+                    width: "5%",
+                    orderable: false,
+                    searchable: false
+                },{
+                    data: "kategori_kode",
+                    className: "",
+                    width: "10%",
+                    orderable: true,
+                    searchable: true
+                }, {
+                    data: "kategori_nama",
+                    className: "",
+                    width: "37%",
+                    orderable: true,
+                    searchable: true,
+                }, {
+                    data: "aksi",
+                    className: "text-center",
+                    width: "14%",
+                    orderable: false,
+                    searchable: false
+                }]
+            });
+            $('#table-kategori_filter input').unbind().bind().on('keyup', function(e) {
+                if (e.keyCode == 13) { // enter key
+                    tableKategori.search(this.value).draw();
+                }
+            });
+            $('.filter_kategori').change(function() {
+                tableKategori.draw();
+            });
+        });
+    </script>
+@endpush

@@ -85,6 +85,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kategori/create_ajax', [KategoriController::class, 'create_ajax']);
         Route::post('/kategori/ajax', [KategoriController::class, 'store_ajax']);
         Route::post('/kategori', [KategoriController::class, 'store']);         // menyimpan data kategori baru
+        Route::get('/kategori/import', [KategoriController::class, 'import']);
+        Route::post('/kategori/import_ajax', [KategoriController::class, 'import_ajax']);
+        Route::get('/kategori/export_excel', [KategoriController::class, 'export_excel']); // export excel
+        Route::get('/kategori/export_pdf', [KategoriController::class, 'export_pdf']); // export pdf
         Route::get('/kategori/{id}', [KategoriController::class, 'show']);       // menampilkan detail kategori
         Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit']);  // menampilkan halaman form edit kategori
         Route::put('/kategori/{id}', [KategoriController::class, 'update']);     // menyimpan perubahan data kategori

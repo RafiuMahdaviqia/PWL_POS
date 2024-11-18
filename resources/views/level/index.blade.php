@@ -24,6 +24,7 @@
                         <th>No</th>
                         <th>Kode level</th>
                         <th>Nama level</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -54,6 +55,12 @@
                     }
                 },
                 columns: [{
+                    data: "level_id",
+                    className: "text-center",
+                    width: "5%",
+                    orderable: false,
+                    searchable: false
+                },{
                     data: "level_kode",
                     className: "",
                     width: "10%",
