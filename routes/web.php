@@ -97,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/import', [BarangController::class, 'import']);
         Route::post('/barang/import_ajax', [BarangController::class, 'import_ajax']);
         Route::get('/barang/export_excel', [BarangController::class, 'export_excel']); // export excel
+        Route::get('/barang/export_pdf', [BarangController::class, 'export_pdf']); // export pdf
         Route::post('/barang/ajax', [BarangController::class, 'store_ajax']);
         Route::get('/barang/{id}', [BarangController::class, 'show']);       // menampilkan detail barang
         Route::get('/barang/{id}/edit', [BarangController::class, 'edit']);  // menampilkan halaman form edit barang
