@@ -56,7 +56,7 @@
                     }
                 },
                 columns: [{
-                    data: "supplier_id",
+                    data: "DT_RowIndex",
                     className: "text-center",
                     width: "5%",
                     orderable: false,

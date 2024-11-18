@@ -6,7 +6,7 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
-            @empty($user)
+            @empty($detail)
                 <div class="alert alert-danger alert-dismissible">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                     Data yang Anda cari tidak ditemukan.
@@ -15,31 +15,28 @@
                 <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
                         <th>ID</th>
-                        <td>{{ $user->user_id }}</td>
+                        <td>{{ $detail->detail_id }}</td>
                     </tr>
                     <tr>
-                        <th>Level</th>
-                        <td>{{ $user->level->level_nama }}</td>
+                        <th>Kode Penjualan</th>
+                        <td>{{ $detail->penjualan->penjualan_kode }}</td>
                     </tr>
                     <tr>
-                        <th>Username</th>
-                        <td>{{ $user->username }}</td>
+                        <th>Barang Nama</th>
+                        <td>{{ $detail->barang->barang_nama }}</td>
                     </tr>
                     <tr>
-                        <th>Nama</th>
-                        <td>{{ $user->nama }}</td>
+                        <th>Harga</th>
+                        <td>{{ $detail->harga }}</td>
                     </tr>
                     <tr>
-                        <th>Password</th>
-                        <td>********</td>
+                        <th>Jumlah</th>
+                        <td>{{ $detail->jumlah }}</td>
                     </tr>
-                    <tr>
-                        <th>foto</th>
-                        <td><img src=" {{ asset($user->foto) }} " height="100"></td>
-                    </tr>
+                    
                 </table>
             @endempty
-            <a href="{{ url('user') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+            <a href="{{ url('detail') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         </div>
     </div>
 @endsection

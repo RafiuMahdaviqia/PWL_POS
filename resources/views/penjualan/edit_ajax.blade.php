@@ -1,4 +1,4 @@
-@empty($user)
+@empty($penjualan)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,60 +10,51 @@
                         <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                         Data yang anda cari tidak ditemukan
                     </div>
-                    <a href="{{ url('/user') }}" class="btn btn-warning">Kembali</a>
+                    <a href="{{ url('/penjualan') }}" class="btn btn-warning">Kembali</a>
                 </div>
             </div>
         </div>
     @else
-        <form action="{{ url('/user/' . $user->user_id . '/update_ajax') }}" method="POST" id="form-edit"
-            enctype="multipart/form-data">
+        <form action="{{ url('/penjualan/' . $penjualan->penjualan_id . '/update_ajax') }}" method="POST" id="form-edit">
             @csrf
             @method('PUT')
             <div id="modal-master" class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data User</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Data Penjualan Barang</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label>Level Pengguna</label>
-                            <select name="level_id" id="level_id" class="form-control" required>
-                                <option value="">- Pilih Level -</option>
-                                @foreach ($level as $l)
-                                    <option {{ $l->level_id == $user->level_id ? 'selected' : '' }}
-                                        value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
-                                @endforeach
-                            </select>
-                            <small id="error-level_id" class="error-text form-text text-danger"></small>
+                        <div class="form-group row">
+                            <label class="col-1 control-label col-form-label">User</label>
+                            <div class="col-11">
+                                <select class="form-control" id="user_id" name="user_id" required>
+                                    <option value="">- Pilih user -</option>
+                                    @foreach ($user as $item)
+                                        <option {{ $item->user_id == $penjualan->user_id ? 'selected' : '' }}
+                                            value="{{ $item->user_id }}">{{ $item->username }}</option>
+                                    @endforeach
+                                </select>
+                                    <small id="error-user_id" class="error-text form-text text-danger"></small>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Username</label>
-                            <input value="{{ $user->username }}" type="text" name="username" id="username"
-                                class="form-control" required>
-                            <small id="error-username" class="error-text form-text text-danger"></small>
+                            <label>Nama Pembeli</label>
+                            <input value="{{ $penjualan->pembeli }}" type="text" name="pembeli" id="pembeli" class="form-control"
+                                required>
+                            <small id="error-pembeli" class="error-text form-text text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label>Nama</label>
-                            <input value="{{ $user->nama }}" type="text" name="nama" id="nama"
-                                class="form-control" required>
-                            <small id="error-nama" class="error-text form-text text-danger"></small>
+                            <label>Kode Penjualan</label>
+                            <input type="text" name="penjualan_kode" id="penjualan_kode" class="form-control" placeholder="{{ $penjualan->penjualan_kode }}">
+                            <small id="error-penjualan_kode" class="error-text form-text text-danger"></small>
                         </div>
                         <div class="form-group">
-                            <label>Password</label>
-                            <input value="" type="password" name="password" id="password" class="form-control">
-                            <small class="form-text text-muted">Abaikan jika tidak ingin ubah
-                                password</small>
-                            <small id="error-password" class="error-text form-text text-danger"></small>
-                        </div>
-                        <div class="form-group">
-                            <label>Foto</label>
-                            <input type="file" name="foto" id="foto" class="form-control"
-                                accept=".png,.jpg,.jpeg">
-                            <small class="form-text text-muted">Abaikan jika tidak ingin ubah
-                                foto</small>
-                            <small id="error-foto" class="error-text form-text text-danger"></small>
+                            <label>Tanggal Penjualan</label>
+                            <input value="{{ $penjualan->penjualan_tanggal }}" type="date" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control"
+                                required>
+                            <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -77,37 +68,28 @@
             $(document).ready(function() {
                 $("#form-edit").validate({
                     rules: {
-                        level_id: {
+                        user_id: {
                             required: true,
                             number: true
                         },
-                        username: {
+                        pembeli: {
                             required: true,
-                            minlength: 3,
-                            maxlength: 20
+                            minlength:3
                         },
-                        nama: {
+                        penjualan_kode: {
+                            required: false,
+                            minlength:3
+                        },
+                        penjualan_tanggal: {
                             required: true,
-                            minlength: 3,
-                            maxlength: 100
-                        },
-                        password: {
-                            minlength: 6,
-                            maxlength: 20
-                        },
-                        foto: {
-                            accept: "png,jpg,jpeg"
-                        },
+                            date:true
+                        }
                     },
                     submitHandler: function(form) {
-                        var formData = new FormData(
-                            form);
                         $.ajax({
                             url: form.action,
                             type: form.method,
-                            data: formData,
-                            processData: false, // setting processData dan contentType ke false, untuk menghandle file 
-                            contentType: false,
+                            data: $(form).serialize(),
                             success: function(response) {
                                 if (response.status) {
                                     $('#myModal').modal('hide');
@@ -116,7 +98,7 @@
                                         title: 'Berhasil',
                                         text: response.message
                                     });
-                                    tableUser.ajax.reload();
+                                    tablePenjualan.ajax.reload();
                                 } else {
                                     $('.error-text').text('');
                                     $.each(response.msgField, function(prefix, val) {

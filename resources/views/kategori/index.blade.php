@@ -18,7 +18,7 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-kategori">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table_kategori">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -43,7 +43,7 @@
         }
         var tableKategori;
         $(document).ready(function() {
-            tableKategori = $('#table-kategori').DataTable({
+            tableKategori = $('#table_kategori').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -55,7 +55,7 @@
                     }
                 },
                 columns: [{
-                    data: "kategori_id",
+                    data: "DT_RowIndex",
                     className: "text-center",
                     width: "5%",
                     orderable: false,
@@ -80,13 +80,10 @@
                     searchable: false
                 }]
             });
-            $('#table-kategori_filter input').unbind().bind().on('keyup', function(e) {
+            $('#tabl_-kategori_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key
                     tableKategori.search(this.value).draw();
                 }
-            });
-            $('.filter_kategori').change(function() {
-                tableKategori.draw();
             });
         });
     </script>

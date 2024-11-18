@@ -1,146 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Pengguna</title>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-</head>
-
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center"><a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a></div>
-            <div class="card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
-                <form action="{{ url('login') }}" method="POST" id="form-login">
-                    @csrf
-                    <div class="input-group mb-3">
-                        <input type="text" id="username" name="username" class="form-control"
-                            placeholder="Username">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                        <small id="error-username" class="error-text text-danger"></small>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" id="password" name="password" class="form-control"
-                            placeholder="Password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                        <small id="error-password" class="error-text text-danger"></small>
-                    </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember"><label for="remember">Remember Me</label>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </form>
+<div class="sidebar">
+    <!-- SidebarSearch Form -->
+    <div class="form-inline mt-2">
+        <div class="input-group" data-widget="sidebar-search">
+            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-sidebar">
+                    <i class="fas fa-search fa-fw"></i>
+                </button>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.login-box -->
+    <!-- Sidebar Menu-->
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+                <a href="{{ url('/') }}" class="nav-link {{ $activeMenu == 'dashboard' ? 'active' : '' }} ">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/profile') }}" class="nav-link {{ $activeMenu == 'profile' ? 'active' : '' }} ">
+                    <i class="nav-icon far fa-address-card"></i>
+                    <p>Profile</p>
+                </a>
+            </li>
+            <li class="nav-header">Data Pengguna</li>
+            <li class="nav-item">
+                <a href="{{ url('/level') }}" class="nav-link {{ $activeMenu == 'level' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-layer-group"></i>
+                    <p>Level User</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/user') }}" class="nav-link {{ $activeMenu == 'user' ? 'active' : '' }}">
+                    <i class="nav-icon far fa-user"></i>
+                    <p>Data User</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/supplier') }}" class="nav-link {{ $activeMenu == 'supplier' ? 'active' : '' }}">
+                    <i class="nav-icon far fa-user"></i>
+                    <p>Data Supplier</p>
+                </a>
+            </li>
+            <li class="nav-header">Data Barang</li>
+            <li class="nav-item">
+                <a href="{{ url('/kategori') }}" class="nav-link {{ $activeMenu == 'kategori' ? 'active' : '' }} ">
+                    <i class="nav-icon far fa-bookmark"></i>
+                    <p>Kategori Barang</p>
+                </a>
+                </11>
+            <li class="nav-item">
+                <a href="{{ url('/barang') }}" class="nav-link {{ $activeMenu == 'barang' ? 'active' : '' }}">
+                    <i class="nav-icon far fa-list-alt"></i>
+                    <p>Data Barang</p>
+                </a>
+            </li>
+            <li class="nav-header">Data Transaksi</li>
+            <li class="nav-item">
+                <a href="{{ url('/stok') }}" class="nav-link {{ $activeMenu == 'stok' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-cubes"></i>
+                    <p>Stok Barang</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/penjualan') }}" class="nav-link {{ $activeMenu == 'penjualan' ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>Transaksi Penjualan</p>
+                </a>
+            </li>
 
-    <!-- jQuery -->
-    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- jquery-validation -->
-    <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $(document).ready(function() {
-            $("#form-login").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        minlength: 4,
-                        maxlength: 20
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6,
-                        maxlength: 20
-                    }
-                },
-                submitHandler: function(form) { // ketika valid, maka bagian yg akan dijalankan
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.status) { // jika sukses
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message,
-                                }).then(function() {
-                                    window.location = response.redirect;
-                                });
-                            } else { // jika error
-                                $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi Kesalahan',
-                                    text: response.message
-                                });
-                            }
-                        }
-                    });
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.input-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
-            });
-        });
-    </script>
-</body>
-
-</html>
+            <!-- Menambahkan Menu Logout -->
+            <li class="nav-item">
+                <a href="{{ url('logout') }}" class="nav-link"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Logout</p>
+                </a>
+                <form id="logout-form" action="{{ url('logout') }}" method="GET" style="display: none;">
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>

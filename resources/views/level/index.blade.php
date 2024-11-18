@@ -18,7 +18,7 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-level">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table_level">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -43,7 +43,7 @@
         }
         var tableLevel;
         $(document).ready(function() {
-            tableLevel = $('#table-level').DataTable({
+            tableLevel = $('#table_level').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -55,7 +55,7 @@
                     }
                 },
                 columns: [{
-                    data: "level_id",
+                    data: "DT_RowIndex",
                     className: "text-center",
                     width: "5%",
                     orderable: false,
@@ -80,7 +80,7 @@
                     searchable: false
                 }]
             });
-            $('#table-level_filter input').unbind().bind().on('keyup', function(e) {
+            $('#table_level_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key
                     tableLevel.search(this.value).draw();
                 }

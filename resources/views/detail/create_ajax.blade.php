@@ -1,42 +1,42 @@
-<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah" enctype="multipart/form-data">
+<form action="{{ url('/detail/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Detail Penjualan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Level Pengguna</label>
-                    <select name="level_id" id="level_id" class="form-control" required>
-                        <option value="">- Pilih Level -</option>
-                        @foreach ($level as $l)
-                            <option value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
+                    <label>Kode Penjualan</label>
+                    <select class="form-control" id="penjualan_id" name="penjualan_id" required>
+                        <option value="">- Pilih penjualan -</option>
+                        @foreach ($penjualan as $a)
+                            <option value="{{ $a->penjualan_id }}">{{ $a->penjualan_kode }}</option>
                         @endforeach
                     </select>
-                    <small id="error-level_id" class="error-text form-text text-danger"></small>
+                    <small id="error-penjualan_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Username</label>
-                    <input value="" type="text" name="username" id="username" class="form-control" required>
-                    <small id="error-username" class="error-text form-text text-danger"></small>
+                    <label>Barang</label>
+                    <select class="form-control" id="barang_id" name="barang_id" required>
+                        <option value="">- Pilih barang -</option>
+                        @foreach ($barang as $b)
+                            <option value="{{ $b->barang_id }}">{{ $b->barang_nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-barang_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Nama</label>
-                    <input value="" type="text" name="nama" id="nama" class="form-control" required>
-                    <small id="error-nama" class="error-text form-text text-danger"></small>
+                    <label>Harga</label>
+                    <input value="" type="text" name="harga" id="harga" class="form-control" required>
+                    <small id="error-harga" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input value="" type="password" name="password" id="password" class="form-control" required>
-                    <small id="error-password" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
-                    <label>Foto</label>
-                    <input value="" type="file" name="foto" id="foto" class="form-control" accept=".png,.jpg,.jpeg">
-                    <small id="error-foto" class="error-text form-text text-danger"></small>
+                    <label>Jumlah</label>
+                    <input value="" type="text" name="jumlah" id="jumlah" class="form-control" required>
+                    <small id="error-jumlah" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -50,38 +50,30 @@
     $(document).ready(function() {
         $("#form-tambah").validate({
             rules: {
-                level_id: {
+                penjualan_id: {
                     required: true,
                     number: true
                 },
-                username: {
+                barang_id: {
                     required: true,
-                    minlength: 3,
-                    maxlength: 20
+                    number: true
                 },
-                nama: {
+                harga: {
                     required: true,
-                    minlength: 3,
-                    maxlength: 100
+                    number: true,
+                    minlength: 3
                 },
-                password: {
+                jumlah: {
                     required: true,
-                    minlength: 6,
-                    maxlength: 20
-                },
-                foto: {
-                    accept: "png,jpg,jpeg"
-                },
+                    number: true,
+                    minlength: 1,
+                }
             },
             submitHandler: function(form) {
-                var formData = new FormData(
-                form);
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: formData,
-                            processData: false, // setting processData dan contentType ke false, untuk menghandle file 
-                            contentType: false,
+                    data: $(form).serialize(),
                     success: function(response) {
                         if (response.status) {
                             $('#myModal').modal('hide');
@@ -90,7 +82,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            tableUser.ajax.reload();
+                            tableDetail.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

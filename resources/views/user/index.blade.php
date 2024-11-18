@@ -7,8 +7,10 @@
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
                 <button onclick="modalAction('{{ url('/user/import') }}')" class="btn btn-info">Import user</button>
-                <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export user</a>
-                <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export user</a>
+                <a href="{{ url('/user/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export
+                    user</a>
+                <a href="{{ url('/user/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export
+                    user</a>
                 <button onclick="modalAction('{{ url('/user/create_ajax') }}')" class="btn btn-success">Tambah Data
                     (Ajax)</button>
             </div>
@@ -20,7 +22,7 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <div class="row">
+            <div id="filter" class="form-horizontal filter-date p-2 border-bottom mb-2">
                 <div class="col-md-12">
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Filter:</label>
@@ -31,12 +33,12 @@
                                     <option value="{{ $item->level_id }}">{{ $item->level_nama }}</option>
                                 @endforeach
                             </select>
-                            <small class="form-text text-muted">Level Pengguna</small>
+                            <small class="form-text text-muted">level</small>
                         </div>
                     </div>
                 </div>
             </div>
-            <table class="table table-bordered table-striped table-hover table-sm" id="table_user">
+            <table class="table table-bordered table-striped table-hover table-sm" id="table-user">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -60,10 +62,11 @@
                 $('#myModal').modal('show');
             });
         }
-        var dataUser;
+        var tableUser;
         $(document).ready(function() {
-            dataUser = $('#table_user').DataTable({
+            tableUser = $('#table-user').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing
+                processing: true,
                 serverSide: true,
                 ajax: {
                     "url": "{{ url('user/list') }}",
@@ -74,7 +77,7 @@
                     }
                 },
                 columns: [{
-                    data: "level.level_id",
+                    data: "DT_RowIndex",
                     className: "text-center",
                     width: "5%",
                     orderable: false,
@@ -88,7 +91,7 @@
                 }, {
                     data: "nama",
                     className: "",
-                    width: "37%",
+                    width: "25%",
                     orderable: true,
                     searchable: true,
                 }, {
@@ -102,7 +105,17 @@
                     className: "",
                     width: "14%",
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    "render": function(data) {
+                            // Check if data exists
+                            if (data) {
+                                // Construct the image URL using Blade syntax
+                                return '<img src=" {{ asset('data') }} " width="50px"/>';
+                            }
+                            return 'Foto Kosong'; // Return empty if no data
+                        
+                    }
+
                 }, {
                     data: "aksi",
                     className: "text-center",
@@ -116,8 +129,8 @@
                     tableUser.search(this.value).draw();
                 }
             });
-            $('.filter_kategori').change(function() {
-                tableUser.draw();
+            $('#level_id').change(function() {
+                tableBarang.draw();
             });
         });
     </script>

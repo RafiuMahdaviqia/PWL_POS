@@ -37,12 +37,12 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-barang">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table_barang">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Kode Barang</th>
-                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
                         <th>Harga
                             Beli</th>
                         <th>Harga Jual</th>
@@ -66,7 +66,7 @@
         }
         var tableBarang;
         $(document).ready(function() {
-            tableBarang = $('#table-barang').DataTable({
+            tableBarang = $('#table_barang').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -78,7 +78,7 @@
                     }
                 },
                 columns: [{
-                    data: "kategori.kategori_id",
+                    data: "DT_RowIndex",
                     className: "text-center",
                     width: "5%",
                     orderable: false,
@@ -127,7 +127,7 @@
                     searchable: false
                 }]
             });
-            $('#table-barang_filter input').unbind().bind().on('keyup', function(e) {
+            $('#table_barang_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key
                     tableBarang.search(this.value).draw();
                 }

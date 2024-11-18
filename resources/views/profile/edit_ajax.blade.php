@@ -10,19 +10,19 @@
                         <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                         Data yang anda cari tidak ditemukan
                     </div>
-                    <a href="{{ url('/user') }}" class="btn btn-warning">Kembali</a>
+                    <a href="{{ url('/profile') }}" class="btn btn-warning">Kembali</a>
                 </div>
             </div>
         </div>
     @else
-        <form action="{{ url('/user/' . $user->user_id . '/update_ajax') }}" method="POST" id="form-edit"
+        <form action="{{ url('/profile/' . session('user_id') . '/update_ajax') }}" method="POST" id="form-edit"
             enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div id="modal-master" class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Data User</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Profile Anda</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                     </div>
@@ -57,14 +57,6 @@
                                 password</small>
                             <small id="error-password" class="error-text form-text text-danger"></small>
                         </div>
-                        <div class="form-group">
-                            <label>Foto</label>
-                            <input type="file" name="foto" id="foto" class="form-control"
-                                accept=".png,.jpg,.jpeg">
-                            <small class="form-text text-muted">Abaikan jika tidak ingin ubah
-                                foto</small>
-                            <small id="error-foto" class="error-text form-text text-danger"></small>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -95,9 +87,6 @@
                             minlength: 6,
                             maxlength: 20
                         },
-                        foto: {
-                            accept: "png,jpg,jpeg"
-                        },
                     },
                     submitHandler: function(form) {
                         var formData = new FormData(
@@ -116,7 +105,7 @@
                                         title: 'Berhasil',
                                         text: response.message
                                     });
-                                    tableUser.ajax.reload();
+                                    profile.ajax.reload();
                                 } else {
                                     $('.error-text').text('');
                                     $.each(response.msgField, function(prefix, val) {
